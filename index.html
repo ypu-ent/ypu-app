@@ -866,7 +866,7 @@ function loadForms(){
 }
 function viewAnalysis(){
   var f = S.forms;
-  var head = '<div class="row spread"><p class="sub" style="margin:0">Googleフォームの回答シートを読み込んで、自動で集計します。回答シートのURLは「権限・連携」で登録します。</p><button class="btn" data-act="reloadForms">読み込み直す</button></div>';
+  var head = '<div class="row spread"><p class="sub" style="margin:0">Googleフォームの回答を読み込んで、自動で集計します。フォームのURLは「権限・連携」で登録します。</p><button class="btn" data-act="reloadForms">読み込み直す</button></div>';
   if(!f) return page(head + '<div class="panel empty">読み込んでいます…</div>');
   var errs = (f.errors || []).map(function(e){ return '<div class="msg">' + esc(e) + '</div>'; }).join('');
   var pa = analyze(f.guests), sa = analyze(f.survey);
@@ -885,9 +885,9 @@ function viewAnalysis(){
     }
   }
   return page(head + errs +
-    '<h2 style="font-size:17px">参加者の属性</h2>' + (f.guests ? '<p class="sub" style="margin:0">参加者申込フォームの回答 ' + f.guests.rows.length + '件</p><div class="grid g3">' + (pa.filter(function(a){ return a.kind === 'cat'; }).map(chart).join('') || '<p class="sub">集計できる列がありません。</p>') + '</div>' : '<p class="sub">参加者申込フォームの回答シートが未登録です。</p>') +
+    '<h2 style="font-size:17px">参加者の属性</h2>' + (f.guests ? '<p class="sub" style="margin:0">参加者申込フォームの回答 ' + f.guests.rows.length + '件</p><div class="grid g3">' + (pa.filter(function(a){ return a.kind === 'cat'; }).map(chart).join('') || '<p class="sub">集計できる列がありません。</p>') + '</div>' : '<p class="sub">参加者申込フォームのURLが未登録です。</p>') +
     '<h2 style="font-size:17px">アンケート結果</h2>' + (f.survey ? '<p class="sub" style="margin:0">アンケートの回答 ' + f.survey.rows.length + '件。5段階評価・選択式・自由記述を列ごとに自動で判定しています</p><div class="grid g3">' + sa.filter(function(a){ return a.kind !== 'text'; }).map(chart).join('') + '</div>' +
-      '<div class="panel"><h2>キーワードマップ' + (textA ? '：' + esc(textA.h) : '') + '</h2>' + kw + '</div>' + quotes : '<p class="sub">アンケートフォームの回答シートが未登録です。</p>'));
+      '<div class="panel"><h2>キーワードマップ' + (textA ? '：' + esc(textA.h) : '') + '</h2>' + kw + '</div>' + quotes : '<p class="sub">アンケートフォームのURLが未登録です。</p>'));
 }
 
 /* ========== 権限・連携 ========== */
@@ -904,10 +904,10 @@ function viewSettings(){
     '<label class="fld">名前<input name="name" value="' + esc(p.name) + '"></label><label class="fld">クライアント<input name="client" value="' + esc(p.client) + '"></label>' +
     '<label class="fld">種別<select name="kind">' + opts(ch['PJ種別'], p.kind, true) + '</select></label><label class="fld">本番日<input name="date" type="date" value="' + esc(p.date) + '"></label>' +
     '<label class="fld">集客目標（名）<input name="target" type="number" min="0" value="' + esc(p.target) + '"></label><label class="fld">状態<select name="state">' + opts(ch['PJ状態'], p.state) + '</select></label></div>' +
-    '<label class="fld">参加者申込フォームの回答シートURL<input name="urlGuest" value="' + esc(p.urlGuest) + '" placeholder="https://docs.google.com/spreadsheets/d/…"></label>' +
-    '<label class="fld">運営メンバー申込フォームの回答シートURL<input name="urlStaff" value="' + esc(p.urlStaff) + '" placeholder="https://docs.google.com/spreadsheets/d/…"></label>' +
-    '<label class="fld">アンケートフォームの回答シートURL<input name="urlSurvey" value="' + esc(p.urlSurvey) + '" placeholder="https://docs.google.com/spreadsheets/d/…"></label>' +
-    '<p class="sub" style="margin:0">回答シートは、Y-PUのアカウントが見られるようにしておいてください。</p><button class="btn pri" type="submit" style="align-self:flex-start">保存する</button></form>';
+    '<label class="fld">参加者申込フォームのURL<input name="urlGuest" value="' + esc(p.urlGuest) + '" placeholder="https://docs.google.com/forms/d/…/edit"></label>' +
+    '<label class="fld">運営メンバー申込フォームのURL<input name="urlStaff" value="' + esc(p.urlStaff) + '" placeholder="https://docs.google.com/forms/d/…/edit"></label>' +
+    '<label class="fld">アンケートフォームのURL<input name="urlSurvey" value="' + esc(p.urlSurvey) + '" placeholder="https://docs.google.com/forms/d/…/edit"></label>' +
+    '<p class="sub" style="margin:0">Googleフォームの<b>編集画面のURL</b>（…/edit で終わるもの）を貼ります。Y-PUのアカウントをそのフォームの<b>編集者</b>に追加しておいてください。回答シート（スプレッドシート）のURLでも読めます。回答する人に送るURL（forms.gle や …/viewform）では読めません。</p><button class="btn pri" type="submit" style="align-self:flex-start">保存する</button></form>';
   var members = '<div class="panel"><h2>このプロジェクトのメンバー</h2>' +
     (a.members.length ? '<div class="list">' + a.members.map(function(m){
       var u = a.users.filter(function(x){ return x.email === m.email; })[0];
